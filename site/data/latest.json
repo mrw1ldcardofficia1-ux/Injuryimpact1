@@ -1,0 +1,29 @@
+{
+ "generated_at": "2026-10-22T12:00:00+00:00",
+ "season": "2026-27",
+ "weights_version": "v1.0+e3b2f7854d",
+ "disclaimer": "Estimate only. Not medical advice; actual return dates may differ.",
+ "is_demo": true,
+ "clubs": [
+  {"name": "Harbourside City", "short": "HBC", "score": 8.43},
+  {"name": "Northgate United", "short": "NGU", "score": 7.33},
+  {"name": "Thornfield Wanderers", "short": "TFW", "score": 6.36},
+  {"name": "Kestrel Town", "short": "KST", "score": 6.11},
+  {"name": "Ironvale Rovers", "short": "IVR", "score": 5.97},
+  {"name": "Stonebridge FC", "short": "STB", "score": 4.79},
+  {"name": "Riverbend Athletic", "short": "RBA", "score": 3.27},
+  {"name": "Westmere Albion", "short": "WMA", "score": 0.0}
+ ],
+ "injuries": [
+  {"player": "Bram Underhill", "club": "Harbourside City", "type": "acl", "raw": "ACL tear", "status": "out", "score": 7.76, "min_weeks": 27.6, "max_weeks": 59.8, "source_name": "mock", "source_url": "https://example.test/mock/injury/3", "needs_review": false, "review_reason": null},
+  {"player": "Idris Thorne", "club": "Riverbend Athletic", "type": "illness", "raw": "stomach bug", "status": "doubtful", "score": 6.54, "min_weeks": 0.6, "max_weeks": 3.4, "source_name": "mock", "source_url": "https://example.test/mock/injury/8", "needs_review": true, "review_reason": "no start date"},
+  {"player": "Emlyn Wren", "club": "Thornfield Wanderers", "type": "muscle strain", "raw": "Muscle injury", "status": "out", "score": 6.36, "min_weeks": 1.1, "max_weeks": 6.9, "source_name": "mock", "source_url": "https://example.test/mock/injury/11", "needs_review": false, "review_reason": null},
+  {"player": "Emlyn Vance", "club": "Northgate United", "type": "hamstring", "raw": "Hamstring tightness", "status": "out", "score": 6.28, "min_weeks": 1.0, "max_weeks": 8.0, "source_name": "mock", "source_url": "https://example.test/mock/injury/1", "needs_review": false, "review_reason": null},
+  {"player": "Finn Quill", "club": "Kestrel Town", "type": "fracture", "raw": "broken leg", "status": "out", "score": 6.11, "min_weeks": 4.0, "max_weeks": 16.0, "source_name": "mock", "source_url": "https://example.test/mock/injury/7", "needs_review": false, "review_reason": null},
+  {"player": "Alder Voss", "club": "Harbourside City", "type": null, "raw": "mystery knock", "status": "doubtful", "score": 5.95, "min_weeks": null, "max_weeks": null, "source_name": "mock", "source_url": "https://example.test/mock/injury/4", "needs_review": true, "review_reason": "unrecognised injury type"},
+  {"player": "Kit Yarrow", "club": "Northgate United", "type": "ankle sprain", "raw": "Sprained ankle", "status": "doubtful", "score": 5.66, "min_weeks": 1.1, "max_weeks": 9.2, "source_name": "mock", "source_url": "https://example.test/mock/injury/2", "needs_review": false, "review_reason": null},
+  {"player": "Gideon Marlow", "club": "Ironvale Rovers", "type": "calf", "raw": "Calf strain", "status": "out", "score": 5.4, "min_weeks": 1.0, "max_weeks": 6.0, "source_name": "mock", "source_url": "https://example.test/mock/injury/6", "needs_review": true, "review_reason": "start date in the future"},
+  {"player": "Jory Thorne", "club": "Ironvale Rovers", "type": "concussion", "raw": "Concussion protocols", "status": "returning", "score": 4.97, "min_weeks": 1.0, "max_weeks": 6.0, "source_name": "mock", "source_url": "https://example.test/mock/injury/5", "needs_review": false, "review_reason": null},
+  {"player": "Alder Vance", "club": "Stonebridge FC", "type": "groin", "raw": "Groin injury", "status": "out", "score": 4.79, "min_weeks": 1.0, "max_weeks": 8.0, "source_name": "mock", "source_url": "https://example.test/mock/injury/9", "needs_review": true, "review_reason": "stale report"}
+ ]
+}
