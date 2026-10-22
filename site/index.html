@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InjuryImpact: how much do Premier League injuries hurt?</title>
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#14202b;--mute:#5b6b7a;--line:#d5dde5;--accent:#0b6e6e}
+@media (prefers-color-scheme:dark){:root{--bg:#0e161d;--card:#16212b;--ink:#e8eef3;--mute:#93a3b1;--line:#27343f;--accent:#4fc3c3}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:860px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);line-height:1.1;margin:.2em 0 .3em;letter-spacing:-.02em}
+h2{font-size:1.15rem;margin:2em 0 .6em}
+p,.note{color:var(--mute);max-width:62ch}
+.note{border-left:3px solid var(--accent);padding:.4em .8em;background:var(--card);font-size:.9rem}
+.club{display:grid;grid-template-columns:7.5em 1fr 3em;gap:.6em;align-items:center;padding:.35em 0}
+.bar{height:14px;background:var(--line);border-radius:7px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:7px}
+.num{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+select{font:inherit;padding:.4em;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px}
+.list{display:grid;gap:8px;margin-top:.8em}
+.inj{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:3.2em 1fr;gap:12px}
+.score{font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.score small{display:block;font-size:.65rem;font-weight:500;color:var(--mute)}
+.meta{color:var(--mute);font-size:.88rem}
+.tag{display:inline-block;font-size:.75rem;padding:0 .5em;border:1px solid var(--line);border-radius:999px;margin-right:.3em}
+.warn{border-color:#c77d00;color:#c77d00}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+<h1>Which Premier League clubs are hurting most from injuries?</h1>
+<p id="asof">Loading latest data…</p>
+<div class="note" id="disc"></div>
+
+<h2>Club injury impact (0 to 10)</h2>
+<div id="clubs" aria-live="polite"></div>
+
+<h2>Current injuries</h2>
+<label>Club <select id="filter"><option value="">All clubs</option></select></label>
+<div class="list" id="injuries"></div>
+
+<h2>How the score works</h2>
+<p>Each injury scores 0 to 10 from the player's share of minutes, share of goals and assists, how hard to replace they are, and how tough the next fixtures are. Club scores combine injuries with diminishing returns, so five minor knocks rank below one star player out. Return times are estimates from typical ranges.</p>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const sev = s => `hsl(${Math.round(42 - Math.min(10, s) * 4.2)} 80% 45%)`;
+const safeUrl = u => /^https?:\/\//i.test(u) ? u : null;
+function el(tag, props = {}, ...kids) {
+  const e = Object.assign(document.createElement(tag), props);
+  kids.forEach(k => e.append(k)); return e;
+}
+let data;
+function renderInjuries() {
+  const club = $("filter").value, box = $("injuries"); box.replaceChildren();
+  const rows = data.injuries.filter(i => !club || i.club === club);
+  if (!rows.length) { box.append(el("p", {textContent: "No injuries reported for this club."})); return; }
+  rows.forEach(i => {
+    const score = el("div", {className: "score", textContent: i.score.toFixed(1)}, el("small", {textContent: "impact"}));
+    score.style.color = sev(i.score);
+    const ret = i.min_weeks != null ? `Estimated return: ${i.min_weeks} to ${i.max_weeks} weeks` : "Return time unknown";
+    const body = el("div", {},
+      el("strong", {textContent: i.player}), el("span", {className: "meta", textContent: ` ${i.club}`}),
+      el("div", {}, el("span", {className: "tag", textContent: i.status}), el("span", {textContent: i.type || i.raw})),
+      el("div", {className: "meta", textContent: ret + ". "}));
+    if (i.needs_review) body.append(el("span", {className: "tag warn", textContent: "Unverified: " + i.review_reason}));
+    const u = safeUrl(i.source_url);
+    if (u) body.lastChild.after(el("a", {href: u, textContent: "Source: " + i.source_name, rel: "noopener"}));
+    box.append(el("div", {className: "inj"}, score, body));
+  });
+}
+fetch("data/latest.json").then(r => r.json()).then(d => {
+  data = d;
+  $("asof").textContent = `Season ${d.season}. Updated ${new Date(d.generated_at).toLocaleString()}.`;
+  $("disc").textContent = d.disclaimer + (d.is_demo ? " This page shows demo data with fictional clubs and players." : "");
+  d.clubs.forEach(c => {
+    const bar = el("div", {className: "bar"}, el("i"));
+    bar.firstChild.style.cssText = `width:${c.score * 10}%;background:${sev(c.score)}`;
+    $("clubs").append(el("div", {className: "club"}, el("span", {textContent: c.name}), bar, el("span", {className: "num", textContent: c.score.toFixed(1)})));
+    $("filter").append(el("option", {value: c.name, textContent: c.name}));
+  });
+  $("filter").onchange = renderInjuries; renderInjuries();
+}).catch(() => { $("asof").textContent = "Could not load the latest data. Refresh the page to try again."; });
+</script>
+</body>
+</html>
